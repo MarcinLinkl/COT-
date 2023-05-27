@@ -1,23 +1,10 @@
 import cot_reports as cot
 import pandas as pd
-from matplotlib import pyplot as plt
 import plotly.graph_objects as go 
 import numpy as np
-
 import matplotlib.pyplot as plt
-
 from dash import dcc,html ,Dash,Output,Input,State
-
-
-# from dash.dependencies import Output,Input,State
-import plotly.graph_objects as go
-
-
 import plotly.express as px
-
-# from jupyter_dash import JupyterDash
-
-
 
 import dash_bootstrap_components as dbc
 import yfinance as yf
@@ -68,7 +55,7 @@ yahoo_tk_fut={
 
 year_now=dt.now().year
 df=pd.DataFrame()
-years_back=3
+years_back=4
 
 for x in range(years_back):
     new_data=cot.cot_year(year = year_now-x, cot_report_type = 'legacy_fut')
@@ -114,6 +101,7 @@ def update_graph(user_input):  # Function arguments come from the component prop
     df_select=df[df['Market and Exchange Names']==user_input].copy()
     df_select.set_index("As of Date in Form YYYY-MM-DD",inplace=True)
     df_select=df_select.iloc[:,7:9]
+    # print(df_select.columns)
     print(df_select)
 
     
@@ -130,8 +118,10 @@ def update_graph(user_input):  # Function arguments come from the component prop
 )
 
 def update_graph2(user_input):
-    df_select = yf.download(user_input ,interval ="1d", period=f'{years_back}y')[["Close"]]
+    date_start=f"{year_now-years_back+1}-01-01"
+    df_select = yf.download(user_input ,interval ="1d", start=date_start)[["Close"]]
+    fig=px.line(df_select)
     fig.update_layout(title=f'{user_input}', legend={'orientation': 'h', 'y': 0, 'yanchor': 'bottom', 'x': 0.5, 'xanchor': 'center'})
     return fig
 if __name__ == '__main__':
-   app.run_server( port=8000)
+   app.run_server( port=9000)
