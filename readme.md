@@ -6,3 +6,4 @@ Second chart is live price from yfinance API.
 ![img app](/assets/img.jpg "COT reports app")
 
 ## app use ONLY Noncommercial Positions long short and net calculation
+this could be easily changed in code by slicing other columns from df_select
